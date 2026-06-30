@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
+//    "baseUrl": ".",
     "importHelpers": true,
     "inlineSourceMap": true,
     "inlineSources": true,
@@ -10,7 +10,7 @@
     "jsx": "react",
     "lib": ["dom", "es6", "scripthost", "es2018"],
     "module": "ESNext",
-    "moduleResolution": "node",
+//    "moduleResolution": "node",
     "noImplicitAny": true,
     "skipLibCheck": true,
     "target": "es2018"

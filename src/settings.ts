@@ -1,17 +1,10 @@
-import {
-  ButtonComponent,
-  ColorComponent,
-  Platform,
-  PluginSettingTab,
-  Setting,
-  TextComponent,
-  debounce,
-  getIconIds,
-  setIcon,
-} from 'obsidian';
+import { ButtonComponent, ColorComponent, Platform, PluginSettingTab, Setting, TextComponent, debounce, getIconIds, setIcon } from 'obsidian';
+
+
 
 import { iconList as icons } from './iconList';
 import ListCalloutsPlugin from './main';
+
 
 export interface Callout {
   char: string;
@@ -74,7 +67,7 @@ function attachIconMenu(
   btn: ButtonComponent,
   onSelect: (icon: null | string) => void
 ) {
-  let menuRef: HTMLDivElement = null;
+  let menuRef: HTMLDivElement | null = null;
   const btnEl = btn.buttonEl;
 
   btn.onClick((e) => {
@@ -302,7 +295,7 @@ function buildNewCalloutSetting(
   const callout: Callout = {
     char: '',
     color: '158, 158, 158',
-    icon: null,
+    icon: undefined,
     custom: true,
   };
 
@@ -383,7 +376,7 @@ export class ListCalloutSettings extends PluginSettingTab {
   plugin: ListCalloutsPlugin;
 
   constructor(plugin: ListCalloutsPlugin) {
-    super(app, plugin);
+    super(plugin.app, plugin);
     this.plugin = plugin;
   }
 

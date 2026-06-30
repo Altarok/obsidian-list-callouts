@@ -2,14 +2,12 @@ import { EditorView } from '@codemirror/view';
 import escapeStringRegexp from 'escape-string-regexp';
 import { Events, MarkdownView, Plugin, debounce } from 'obsidian';
 
+
+
 import { calloutExtension, calloutsConfigField, setConfig } from './extension';
 import { buildPostProcessor } from './postProcessor';
-import {
-  Callout,
-  CalloutConfig,
-  ListCalloutSettings,
-  ListCalloutsSettings,
-} from './settings';
+import { Callout, CalloutConfig, ListCalloutSettings, ListCalloutsSettings } from './settings';
+
 
 const DEFAULT_SETTINGS: ListCalloutsSettings = [
   {
@@ -66,7 +64,7 @@ export default class ListCalloutsPlugin extends Plugin {
       calloutExtension,
     ]);
 
-    app.workspace.trigger('parse-style-settings');
+    this.app.workspace.trigger('parse-style-settings');
   }
 
   emitSettingsUpdate = debounce(() => this.dispatchUpdate(), 2000, true);
@@ -74,7 +72,7 @@ export default class ListCalloutsPlugin extends Plugin {
   dispatchUpdate() {
     const newConfig = this.buildEditorConfig();
 
-    app.workspace.getLeavesOfType('markdown').find((l) => {
+    this.app.workspace.getLeavesOfType('markdown').find((l) => {
       const view = l.view as MarkdownView;
       const cm = (view.editor as any).cm as EditorView;
 
@@ -86,30 +84,36 @@ export default class ListCalloutsPlugin extends Plugin {
 
   buildEditorConfig(): CalloutConfig {
     return {
-      callouts: this.settings.reduce<Record<string, Callout>>((record, curr) => {
-        record[curr.char] = curr;
-        return record
-      }, {}),
-      re: new RegExp(
-        `(^\\s*[-*+](?: \\[.\\])? |^\\s*\\d+[\\.\\)](?: \\[.\\])? )(${
-          this.settings.map(callout => escapeStringRegexp(callout.char)).join('|')
-        }) `
+      callouts: this.settings.reduce<Record<string, Callout>>(
+        (record, curr) => {
+          record[curr.char] = curr;
+          return record;
+        },
+        {}
       ),
-    }
+      re: new RegExp(
+        `(^\\s*[-*+](?: \\[.\\])? |^\\s*\\d+[\\.\\)](?: \\[.\\])? )(${this.settings
+          .map((callout) => escapeStringRegexp(callout.char))
+          .join('|')}) `
+      ),
+    };
   }
 
   buildPostProcessorConfig() {
     this.postProcessorConfig = {
-      callouts: this.settings.reduce<Record<string, Callout>>((record, curr) => {
-        record[curr.char] = curr;
-        return record
-      }, {}),
-      re: new RegExp(
-        `^(${
-          this.settings.map(callout => escapeStringRegexp(callout.char)).join('|')
-        }) `
+      callouts: this.settings.reduce<Record<string, Callout>>(
+        (record, curr) => {
+          record[curr.char] = curr;
+          return record;
+        },
+        {}
       ),
-    }
+      re: new RegExp(
+        `^(${this.settings
+          .map((callout) => escapeStringRegexp(callout.char))
+          .join('|')}) `
+      ),
+    };
   }
 
   async loadSettings() {
